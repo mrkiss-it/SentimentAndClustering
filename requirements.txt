@@ -8,3 +8,4 @@ wordcloud
 regex
 langdetect
 nltk
+underthesea
