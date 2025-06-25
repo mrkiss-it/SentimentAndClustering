@@ -9,3 +9,4 @@ regex
 langdetect
 nltk
 underthesea
+openpyxl
