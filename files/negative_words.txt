@@ -1,0 +1,328 @@
+áp lực
+độc hại
+căng thẳng
+drama
+chán nản
+thiếu công bằng
+không rõ ràng
+sếp khó tính
+lương thấp
+OT nhiều
+không thưởng
+chậm lương
+ít học hỏi
+không được đào tạo
+không rõ lộ trình
+stress
+toxic
+pressured
+unfair
+unclear
+low salary
+no bonus
+delayed salary
+lack of training
+overwork
+boring
+micromanage
+underpaid
+no growth
+no support
+
+# Bổ sung thêm từ tiêu cực
+kiệt sức
+cạnh tranh gay gắt
+phân biệt đối xử
+bất công
+thiên vị
+môi trường độc hại
+làm việc quá sức
+không được ghi nhận
+thiếu tôn trọng
+sự phân biệt
+không được tin tưởng
+thiếu minh bạch
+chính sách mập mờ
+không ổn định
+sa thải bất ngờ
+không có phúc lợi
+thiếu thiết bị
+môi trường lạnh lùng
+đồng nghiệp khó chịu
+không được support
+thiếu feedback
+quy trình rườm rà
+bureaucracy
+làm việc cuối tuần
+không work-life balance
+burnout
+harassment
+discrimination
+favoritism
+exploitation
+unrealistic deadlines
+poor communication
+lack of resources
+outdated technology
+hostile environment
+office politics
+backstabbing
+gossip
+blame culture
+fear-based management
+unreasonable expectations
+constant criticism
+no recognition
+dead-end job
+repetitive tasks
+meaningless work
+job insecurity
+layoffs
+downsizing
+restructuring
+budget cuts
+understaffed
+overloaded
+impossible targets
+unreachable goals
+constant surveillance
+no privacy
+trust issues
+broken promises
+false advertising
+misleading job description
+bait and switch
+no career path
+ceiling effect
+glass ceiling
+dead end
+stagnant
+outdated skills
+irrelevant experience
+wasted potential
+frustrated
+demotivated
+disillusioned
+hopeless
+trapped
+exhausted
+drained
+overwhelmed
+anxious
+depressed
+isolated
+excluded
+ignored
+undervalued
+unappreciated
+disrespected
+humiliated
+embarrassed
+
+# Bổ sung thêm từ tiêu cực khác
+thất nghiệp
+mất việc
+bị sa thải
+không an toàn
+bất ổn
+thiếu bảo hiểm
+không có hợp đồng
+làm thêm giờ không lương
+khai thác sức lao động
+áp bức
+bóc lột
+gian lận
+lừa đảo
+lạm dụng quyền lực
+quấy rối tình dục
+bắt nạt
+đe dọa
+hù dọa
+ép buộc
+cưỡng chế
+unemployment
+job loss
+fired
+terminated
+laid off
+redundant
+insecure
+unstable
+unprotected
+exploited
+abused
+bullied
+threatened
+coerced
+forced
+manipulated
+deceived
+cheated
+scammed
+underhanded
+shady
+corrupt
+dishonest
+unethical
+immoral
+illegal
+unsafe
+dangerous
+hazardous
+risky
+precarious
+vulnerable
+helpless
+powerless
+voiceless
+silenced
+censored
+suppressed
+oppressed
+marginalized
+sidelined
+overlooked
+forgotten
+abandoned
+betrayed
+let down
+disappointed
+misled
+misinformed
+confused
+lost
+directionless
+aimless
+purposeless
+pointless
+useless
+worthless
+incompetent
+inadequate
+insufficient
+substandard
+mediocre
+poor quality
+low standards
+unprofessional
+amateurish
+sloppy
+careless
+negligent
+irresponsible
+unreliable
+untrustworthy
+dishonest
+fake
+phony
+pretentious
+arrogant
+condescending
+patronizing
+dismissive
+rude
+impolite
+disrespectful
+inappropriate
+uncomfortable
+awkward
+embarrassing
+humiliating
+degrading
+demeaning
+insulting
+offensive
+hurtful
+painful
+devastating
+crushing
+heartbreaking
+soul-destroying
+life-draining
+energy-sapping
+motivation-killing
+spirit-breaking
+confidence-destroying
+self-esteem-damaging
+reputation-ruining
+career-ending
+future-limiting
+potential-wasting
+time-consuming
+resource-draining
+money-losing
+unprofitable
+costly
+expensive
+wasteful
+inefficient
+unproductive
+counterproductive
+destructive
+harmful
+damaging
+detrimental
+negative
+pessimistic
+cynical
+bitter
+resentful
+angry
+furious
+enraged
+livid
+seething
+boiling
+explosive
+volatile
+unstable
+unpredictable
+chaotic
+disorganized
+messy
+cluttered
+confusing
+complicated
+complex
+difficult
+challenging
+demanding
+exhausting
+tiring
+draining
+wearing
+grinding
+relentless
+endless
+never-ending
+constant
+persistent
+ongoing
+chronic
+long-term
+permanent
+irreversible
+unfixable
+hopeless
+impossible
+unachievable
+unrealistic
+impractical
+unworkable
+unviable
+unsustainable
+doomed
+failing
+broken
+damaged
+ruined
+destroyed
+finished
+over
+done
+ended
+closed
+shut down
+bankrupt
+insolvent
+failed

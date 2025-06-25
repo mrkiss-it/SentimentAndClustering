@@ -1,0 +1,482 @@
+dự án
+khách hàng
+công nghệ
+quy trình
+fulltime
+parttime
+remote
+hybrid
+văn phòng
+chi nhánh
+HN
+HCM
+team
+đồng nghiệp
+leader
+support
+project
+client
+technology
+process
+fulltime
+parttime
+remote
+hybrid
+office
+branch
+hanoi
+saigon
+team
+coworker
+leader
+support
+
+# Bổ sung thêm từ khóa trung tính
+công ty
+tổ chức
+doanh nghiệp
+startup
+tập đoàn
+công ty con
+liên doanh
+hợp tác xã
+nhà máy
+xưởng sản xuất
+kho bãi
+cửa hàng
+showroom
+phòng ban
+bộ phận
+department
+division
+unit
+sector
+branch office
+headquarters
+subsidiary
+joint venture
+manufacturing
+warehouse
+retail
+showroom
+HR
+nhân sự
+kế toán
+tài chính
+marketing
+sales
+bán hàng
+IT
+tech
+công nghệ thông tin
+R&D
+nghiên cứu phát triển
+QA
+QC
+kiểm tra chất lượng
+operations
+vận hành
+logistics
+chuỗi cung ứng
+supply chain
+procurement
+mua sắm
+legal
+pháp lý
+compliance
+tuân thủ
+audit
+kiểm toán
+finance
+accounting
+human resources
+information technology
+research development
+quality assurance
+quality control
+supply chain management
+purchasing
+legal department
+compliance team
+audit department
+nhân viên
+staff
+employee
+worker
+personnel
+workforce
+manpower
+headcount
+FTE
+contractor
+freelancer
+intern
+trainee
+thực tập sinh
+graduate trainee
+management trainee
+junior
+senior
+executive
+manager
+director
+VP
+CEO
+CTO
+CFO
+COO
+CMO
+CHRO
+head of
+trưởng phòng
+phó phòng
+supervisor
+team lead
+coordinator
+specialist
+expert
+analyst
+consultant
+advisor
+assistant
+secretary
+administrator
+receptionist
+security
+bảo vệ
+driver
+tài xế
+cleaner
+vệ sinh
+maintenance
+bảo trì
+technician
+kỹ thuật viên
+engineer
+kỹ sư
+developer
+lập trình viên
+designer
+thiết kế
+architect
+kiến trúc sư
+tester
+QA engineer
+business analyst
+product manager
+project manager
+scrum master
+product owner
+stakeholder
+vendor
+supplier
+nhà cung cấp
+partner
+đối tác
+competitor
+đối thủ
+market
+thị trường
+industry
+ngành
+sector
+lĩnh vực
+domain
+field
+area
+expertise
+chuyên môn
+skill
+kỹ năng
+experience
+kinh nghiệm
+knowledge
+kiến thức
+qualification
+bằng cấp
+certification
+chứng chỉ
+degree
+diploma
+bachelor
+master
+PhD
+MBA
+training
+đào tạo
+workshop
+seminar
+conference
+hội nghị
+meeting
+cuộc họp
+presentation
+thuyết trình
+report
+báo cáo
+document
+tài liệu
+file
+email
+message
+tin nhắn
+call
+cuộc gọi
+video call
+zoom
+teams
+slack
+skype
+communication
+giao tiếp
+collaboration
+hợp tác
+coordination
+phối hợp
+planning
+lập kế hoạch
+strategy
+chiến lược
+objective
+mục tiêu
+goal
+target
+KPI
+OKR
+milestone
+cột mốc
+deadline
+hạn chót
+timeline
+lịch trình
+schedule
+thời gian biểu
+calendar
+lịch
+task
+nhiệm vụ
+assignment
+công việc được giao
+responsibility
+trách nhiệm
+duty
+nghĩa vụ
+role
+vai trò
+position
+vị trí
+job title
+chức danh
+job description
+mô tả công việc
+requirement
+yêu cầu
+criteria
+tiêu chí
+standard
+tiêu chuẩn
+policy
+chính sách
+procedure
+thủ tục
+guideline
+hướng dẫn
+regulation
+quy định
+rule
+quy tắc
+contract
+hợp đồng
+agreement
+thỏa thuận
+SLA
+service level agreement
+NDA
+non-disclosure agreement
+probation
+thử việc
+permanent
+chính thức
+temporary
+tạm thời
+seasonal
+theo mùa
+shift
+ca làm việc
+overtime
+làm thêm giờ
+break
+nghỉ giải lao
+lunch break
+nghỉ trưa
+leave
+nghỉ phép
+sick leave
+nghỉ ốm
+maternity leave
+nghỉ thai sản
+vacation
+kỳ nghỉ
+holiday
+ngày lễ
+weekend
+cuối tuần
+workday
+ngày làm việc
+business day
+ngày làm việc
+working hours
+giờ làm việc
+office hours
+giờ hành chính
+9to5
+8to5
+flexible hours
+giờ linh hoạt
+core hours
+giờ bắt buộc có mặt
+attendance
+điểm danh
+check-in
+check-out
+timesheet
+bảng chấm công
+payroll
+bảng lương
+salary
+lương
+wage
+tiền công
+hourly rate
+lương theo giờ
+commission
+hoa hồng
+bonus
+thưởng
+allowance
+phụ cấp
+benefit
+phúc lợi
+insurance
+bảo hiểm
+health insurance
+bảo hiểm y tế
+social insurance
+bảo hiểm xã hội
+pension
+lương hưu
+401k
+retirement fund
+quỹ hưu trí
+stock option
+quyền chọn cổ phiếu
+equity
+cổ phần
+performance review
+đánh giá hiệu suất
+appraisal
+đánh giá
+feedback
+phản hồi
+evaluation
+đánh giá
+assessment
+đánh giá
+rating
+xếp hạng
+score
+điểm số
+ranking
+xếp hạng
+promotion
+thăng chức
+demotion
+giáng chức
+transfer
+chuyển công tác
+relocation
+di chuyển
+resignation
+từ chức
+termination
+chấm dứt hợp đồng
+layoff
+sa thải
+downsizing
+cắt giảm nhân sự
+restructuring
+tái cấu trúc
+merger
+sáp nhập
+acquisition
+mua lại
+IPO
+niêm yết
+listing
+niêm yết
+expansion
+mở rộng
+growth
+tăng trưởng
+revenue
+doanh thu
+profit
+lợi nhuận
+loss
+lỗ
+budget
+ngân sách
+cost
+chi phí
+expense
+chi tiêu
+investment
+đầu tư
+ROI
+return on investment
+funding
+tài trợ
+capital
+vốn
+asset
+tài sản
+liability
+nợ phải trả
+equity
+vốn chủ sở hữu
+cash flow
+dòng tiền
+financial statement
+báo cáo tài chính
+balance sheet
+bảng cân đối kế toán
+income statement
+báo cáo thu nhập
+P&L
+profit and loss
+quarterly
+theo quý
+annual
+hàng năm
+fiscal year
+năm tài chính
+tax
+thuế
+compliance
+tuân thủ
+regulation
+quy định
+standard
+tiêu chuẩn
+certification
+chứng nhận
+accreditation
+công nhận
+license
+giấy phép
+permit
+giấy phép
+approval
+phê duyệt
+authorization
+ủy quyền
