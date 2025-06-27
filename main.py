@@ -1,3 +1,4 @@
+import difflib
 import streamlit as st
 from sklearn.preprocessing import MinMaxScaler
 from scipy.sparse import hstack, csr_matrix
@@ -66,8 +67,8 @@ elif choice_lv1 == 'Sentiment Analysis':
 
     elif choice_lv2 == "Build Project":
         st.write("##### 1. Some data")
-        st.dataframe(df_reviews.head(3))
-        st.dataframe(df_reviews.tail(3))
+        st.dataframe(df_reviews[['Company Name', 'clean_basic_text']].head(3))
+        st.dataframe(df_reviews[['Company Name', 'clean_basic_text']].tail(3))
 
         st.write("##### 2. Visualize")
         fig = check_wordcloud(df_reviews['clean_advance_text2'], 'clean_text')
@@ -122,6 +123,83 @@ weighted avg       0.98      0.98      0.98      2231''')
             fig = check_wordcloud([process_advance_text], 'clean_text')
             st.pyplot(fig.figure)
 
+
+        st.markdown("---")
+        st.subheader("🏢 Phân tích theo tên công ty")
+
+        company_list = df_reviews['Company Name'].dropna().unique().tolist()
+        company_list.sort()
+
+        search_type = st.radio("Chọn cách tìm công ty:", ['Chọn từ danh sách', 'Nhập tên gần đúng'])
+
+        if search_type == 'Chọn từ danh sách':
+            selected_company = st.selectbox("Chọn công ty", company_list)
+        else:
+            search_text = st.text_input("Nhập tên công ty (gần đúng):")
+            matched_companies = difflib.get_close_matches(search_text, company_list, n=5, cutoff=0.3)
+            if matched_companies:
+                selected_company = st.selectbox("Chọn công ty phù hợp:", matched_companies)
+            else:
+                selected_company = None
+                st.warning("❌ Không tìm thấy công ty phù hợp.")
+
+        if selected_company:
+            st.success(f"✅ Đang hiển thị thông tin cho: {selected_company}")
+
+            df_company = df_reviews[df_reviews['Company Name'] == selected_company]
+
+            # 1. Tổng quan
+            st.markdown(f"**Số lượng đánh giá:** {len(df_company)}")
+
+            # 2. Tỷ lệ cảm xúc
+            sentiment_counts = df_company['Pred_FN'].value_counts(normalize=True).mul(100).round(2)
+            st.write("### 📊 Tỷ lệ cảm xúc:")
+            st.bar_chart(sentiment_counts)
+
+            # 3. WordCloud
+            fig_wc = check_wordcloud(df_company['clean_advance_text2'], 'clean_text')
+            st.pyplot(fig_wc.figure)
+
+            # 4. Top từ khóa theo cảm xúc
+            col1, col2 = st.columns(2)
+            with col1:
+                st.write("#### 🔴 Từ tiêu cực:")
+                neg_df = df_company[df_company['Pred_FN'] == 'negative']
+                neg_texts = " ".join(neg_df['clean_advance_text2'].dropna().astype(str))
+
+                if neg_texts.strip():
+                    try:
+                        fig_neg, ax = plt.subplots(figsize=(8, 4))
+                        wc_neg = WordCloud(width=800, height=400, background_color='white').generate(neg_texts)
+                        ax.imshow(wc_neg, interpolation='bilinear')
+                        ax.axis("off")
+                        st.pyplot(fig_neg)
+                    except ValueError as e:
+                        st.warning("❌ Không đủ từ để tạo WordCloud tiêu cực.")
+                else:
+                    st.info("💬 Không có review tiêu cực nào.")
+
+            with col2:
+                st.write("#### 🟢 Từ tích cực:")
+                pos_df = df_company[df_company['Pred_FN'] == 'positive']
+                pos_texts = " ".join(pos_df['clean_advance_text2'].dropna().astype(str))
+
+                if pos_texts.strip():
+                    try:
+                        fig_pos, ax = plt.subplots(figsize=(8, 4))
+                        wc_pos = WordCloud(width=800, height=400, background_color='white').generate(pos_texts)
+                        ax.imshow(wc_pos, interpolation='bilinear')
+                        ax.axis("off")
+                        st.pyplot(fig_pos)
+                    except ValueError as e:
+                        st.warning("❌ Không đủ từ để tạo WordCloud tích cực.")
+                else:
+                    st.info("💬 Không có review tích cực nào.")
+
+
+        # 5. Danh sách review (có thể ẩn/hiện)
+            with st.expander("📄 Danh sách đánh giá (ẩn/hiện)"):
+                st.dataframe(df_company[['clean_basic_text', 'Pred_FN']])
 
 elif choice_lv1 == 'Information Clustering':
     # Load model
