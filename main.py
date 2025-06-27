@@ -66,33 +66,71 @@ elif choice_lv1 == 'Sentiment Analysis':
         """)
 
     elif choice_lv2 == "Build Project":
-        st.write("##### 1. Some data")
-        st.dataframe(df_reviews[['Company Name', 'clean_basic_text']].head(3))
-        st.dataframe(df_reviews[['Company Name', 'clean_basic_text']].tail(3))
+        st.subheader("🔧 Xây dựng mô hình phân tích cảm xúc")
 
-        st.write("##### 2. Visualize")
-        fig = check_wordcloud(df_reviews['clean_advance_text2'], 'clean_text')
-        st.pyplot(fig.figure)
+        st.write("##### 1. Dữ liệu mẫu từ review")
+        st.dataframe(df_reviews[['Company Name', 'reviews_text']].head(3))
+        st.dataframe(df_reviews[['Company Name', 'reviews_text']].tail(3))
 
-        st.write("##### 3. Build model...")
+        st.write("##### 2. Trực quan hóa WordCloud toàn bộ review")
+        fig_wc = check_wordcloud(df_reviews['clean_advance_text2'], 'Reviews')
+        if fig_wc:
+            st.pyplot(fig_wc.figure)
 
-        st.write("##### 4. Evaluation")
-        st.code('📌 Cross-Validation Accuracy: 0.9804 (+/- 0.0029)')
-        st.write("###### Confusion matrix:")
+        st.write("##### 3. Các mô hình đã huấn luyện và so sánh")
+        st.markdown("""
+    | Mô hình             | Accuracy | Ưu điểm                           | Nhược điểm                     |
+    |---------------------|----------|-----------------------------------|--------------------------------|
+    | Naive Bayes         | 0.8237   | Nhanh, đơn giản                   | Độ chính xác thấp              |
+    | Logistic Regression | 0.9448   | Dễ triển khai, giải thích được    | Không xử lý phi tuyến tốt      |
+    | SVM                 | 0.9529   | Phân biệt tốt                     | Tốn tài nguyên, chậm           |
+    | Random Forest       | 0.9643   | Chính xác cao, chống overfit tốt  | Có thể hơi chậm khi scale lớn  |
+    """)
+
+        st.write("##### 4. Kết hợp mô hình (Stacking)")
+        st.markdown("""
+    Mô hình **StackingClassifier** được xây dựng bằng cách kết hợp 3 mô hình mạnh nhất:
+    
+    - 🎯 Logistic Regression
+    - 🎯 SVM
+    - 🎯 Random Forest
+    
+    Sau đó, một **Logistic Regression** được dùng làm **meta-model** để tổng hợp kết quả từ các mô hình con.
+    
+    ✅ Sử dụng `passthrough=True` giúp meta-model thấy cả đặc trưng gốc lẫn kết quả trung gian.
+    
+    **Ưu điểm:** kết hợp điểm mạnh của nhiều mô hình → tăng độ chính xác và khả năng tổng quát hóa.
+    """)
+
+        st.write("##### 5. So sánh Accuracy giữa các mô hình")
+        import matplotlib.pyplot as plt
+        model_names = ["Naive Bayes", "Logistic Regression", "SVM", "Random Forest", "Stacking"]
+        accuracies = [0.8237, 0.9448, 0.9529, 0.9643, 0.9804]
+        fig_acc, ax = plt.subplots(figsize=(10, 5))
+        bars = ax.bar(model_names, accuracies, color=['gray', 'orange', 'blue', 'green', 'purple'])
+        ax.set_ylim(0.8, 0.985)
+        ax.set_ylabel("Accuracy")
+        ax.set_title("So sánh độ chính xác giữa các mô hình")
+        ax.bar_label(bars, fmt="%.4f", padding=3)
+        plt.xticks(rotation=15)
+        plt.tight_layout()
+        st.pyplot(fig_acc)
+
+        st.write("##### 6. Báo cáo mô hình cuối cùng (Stacking)")
+        st.code('''📌 Model: StackingClassifier
+    Cross-Validation Accuracy: 0.9804 (+/- 0.0029)
+    Classification Report:
+                  precision    recall  f1-score   support
+        negative       0.98      0.98      0.98       742
+         neutral       0.97      0.99      0.98       744
+        positive       0.98      0.95      0.97       745
+    
+        accuracy                           0.98      2231
+       macro avg       0.98      0.98      0.98      2231
+    weighted avg       0.98      0.98      0.98      2231''')
+
         st.image('sentiment/Confusion Matrix -  Stacking.png')
-        st.write("###### Classification report:")
-        st.code('''📊 Classification Report for Stacking Model:
-              precision    recall  f1-score   support
 
-    negative       0.98      0.98      0.98       742
-     neutral       0.97      0.99      0.98       744
-    positive       0.98      0.95      0.97       745
-
-    accuracy                           0.98      2231
-   macro avg       0.98      0.98      0.98      2231
-weighted avg       0.98      0.98      0.98      2231''')
-
-        st.write("##### 5. Summary: This model is good enough for Ham vs Spam classification.")
 
 
     elif choice_lv2 == "New Prediction":
@@ -120,7 +158,7 @@ weighted avg       0.98      0.98      0.98      2231''')
             elif y_pred == 'negative':
                 st.write(", ".join([x.strip() for x in neg_words if x.strip() != "" and x.lower() in process_text.lower()]))
 
-            fig = check_wordcloud([process_advance_text], 'clean_text')
+            fig = check_wordcloud([process_advance_text], 'Content')
             st.pyplot(fig.figure)
 
 
@@ -157,7 +195,7 @@ weighted avg       0.98      0.98      0.98      2231''')
             st.bar_chart(sentiment_counts)
 
             # 3. WordCloud
-            fig_wc = check_wordcloud(df_company['clean_advance_text2'], 'clean_text')
+            fig_wc = check_wordcloud(df_company['clean_advance_text2'], 'Reviews')
             st.pyplot(fig_wc.figure)
 
             # 4. Top từ khóa theo cảm xúc
@@ -218,30 +256,50 @@ elif choice_lv1 == 'Information Clustering':
     elif choice_lv2 == "Build Project":
         st.subheader("🏗️ Xây dựng mô hình phân cụm")
         st.markdown("""
-- Thuật toán sử dụng:
-    - **KMeans**, **Agglomerative Clustering**, **DBSCAN**
-- Có thể kết hợp LDA để xác định số cụm tối ưu.
-- Trực quan hóa cụm bằng biểu đồ, wordcloud.
+        - Thuật toán được sử dụng: **KMeans** (đã được chọn làm model tốt nhất)
+        - Quá trình xử lý:
+            1. Tiền xử lý văn bản bằng TF-IDF
+            2. Chuẩn hóa các đặc trưng số (rating, salary...)
+            3. Kết hợp đặc trưng số và văn bản
+            4. Phân cụm bằng KMeans
         """)
-        st.write("##### 1. Some data")
-        st.dataframe(df_reviews.head(3))
-        st.dataframe(df_reviews.tail(3))
 
-        st.write("##### 2. Visualize")
-        fig = check_wordcloud(df_reviews['clean_advance_text2'], 'clean_text')
+        st.write("##### 1. Dữ liệu đầu vào")
+        st.dataframe(df_reviews[['Company Name', 'reviews_text']].head(3))
+        st.dataframe(df_reviews[['Company Name', 'reviews_text']].tail(3))
+
+        st.write("##### 2. Tiền xử lý văn bản")
+        st.code("""
+        # Quá trình tiền xử lý bao gồm:
+        - Làm sạch văn bản
+        - Phân đoạn câu (split sentences)
+        - Xử lý ngôn ngữ tự nhiên
+        - Vector hóa bằng TF-IDF
+        """)
+
+        st.write("##### 3. Xây dựng mô hình")
+        st.code("""
+        # Các bước chính:
+        1. Khởi tạo MinMaxScaler cho các đặc trưng số
+        2. Load TF-IDF vectorizer đã được huấn luyên
+        3. Load mô hình KMeans đã được huấn luyện
+        4. Kết hợp đặc trưng số và văn bản
+        5. Phân cụm bằng KMeans
+        """)
+
+        st.write("##### 4. Đánh giá cụm")
+        st.markdown("""
+        - Các cụm được đặt tên: **EXCELLENT**, **AVERAGE**, **PROBLEMATIC**
+        - Đánh giá chất lượng cụm bằng phương pháp Silhouette Score
+        - Trực quan hóa bằng word cloud cho từng cụm
+        """)
+
+        # Hiển thị word cloud mẫu
+        fig = check_wordcloud(df_reviews['clean_advance_text2'], 'Reviews')
         st.pyplot(fig.figure)
 
-        st.write("##### 3. Build model...")
-
-        st.write("##### 4. Evaluation")
-        st.code('📌 Cross-Validation Accuracy: 0.9961 (+/- 0.0009)')
-        st.write("###### Confusion matrix:")
-        st.image('clustering/Confusion Matrix -  Logistic Regression.png')
-        st.write("###### Classification report:")
-        st.code('''📊 Classification Report for Stacking Model:
-              precision    recall  f1-score   support''')
-
-        st.write("##### 5. Summary: This model is good enough for Ham vs Spam classification.")
+        st.write("##### 5. Tổng kết")
+        st.success("Model phân cụm đã sẵn sàng để phân loại các đánh giá mới vào 3 nhóm chính!")
 
     elif choice_lv2 == "New Prediction":
         st.subheader("🆕 Gom nhóm đánh giá mới")
