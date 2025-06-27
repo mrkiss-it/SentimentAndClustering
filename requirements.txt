@@ -11,4 +11,3 @@ nltk
 underthesea
 openpyxl
 tornado
-difflib
