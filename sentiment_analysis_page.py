@@ -61,7 +61,7 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
         
         with col1:
             st.markdown("""
-            <div class="metric-card">
+            <div class="info-card">
                 <h3>📝 Yêu cầu</h3>
                 <p>Các công ty đang nhận nhiều đánh giá từ ITviec</p>
             </div>
@@ -69,7 +69,7 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
         
         with col2:
             st.markdown("""
-            <div class="metric-card">
+            <div class="info-card">
                 <h3>🎯 Mục tiêu</h3>
                 <p>Phân tích cảm xúc: tích cực, tiêu cực, trung lập</p>
             </div>
@@ -77,7 +77,7 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
         
         with col3:
             st.markdown("""
-            <div class="metric-card">
+            <div class="info-card">
                 <h3>💼 Ứng dụng</h3>
                 <p>Đánh giá độ hài lòng nhân viên, cải thiện hình ảnh</p>
             </div>
