@@ -409,7 +409,7 @@ if choice_lv1 == 'Tổng quan':
         
         with col2:
             st.markdown("""
-            <div class="metric-card">
+            <div class="info-card">
                 <h3>Nguồn dữ liệu</h3>
                 <p>Dữ liệu từ <strong>ITviec.com</strong></p>
                 <p>Reviews từ ứng viên và nhân viên</p>
