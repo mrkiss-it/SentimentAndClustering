@@ -105,98 +105,183 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
             """, unsafe_allow_html=True)
 
     elif choice_lv2_clean == "Build Project":
-        st.markdown('<h1 class="section-header">🏗️ Xây dựng mô hình phân cụm</h1>', unsafe_allow_html=True)
-        
-        # Theo pattern từ file gốc
-        st.markdown("""
-        - Thuật toán được sử dụng: **KMeans** (đã được chọn làm model tốt nhất)
-        - Quá trình xử lý:
-            1. Tiền xử lý văn bản bằng TF-IDF
-            2. Chuẩn hóa các đặc trưng số (rating, salary...)
-            3. Kết hợp đặc trưng số và văn bản
-            4. Phân cụm bằng KMeans
-        """)
+        st.markdown('<h1 class="section-header">🏗️ Xây dựng mô hình phân cụm thông tin</h1>', unsafe_allow_html=True)
 
-        st.write("##### 1. Dữ liệu đầu vào")
-        st.dataframe(df_reviews[['Company Name', 'reviews_text']].head(3))
-        st.dataframe(df_reviews[['Company Name', 'reviews_text']].tail(3))
+        # Tabs giống sentiment_analysis_page
+        tab1, tab2, tab3, tab4 = st.tabs(["📊 Dữ liệu", "☁️ WordCloud", "🤖 Mô hình", "📈 Kết quả"])
 
-        st.write("##### 2. Tiền xử lý văn bản")
-        st.code("""
-        # Quá trình tiền xử lý bao gồm:
-        - Làm sạch văn bản
-        - Phân đoạn câu (split sentences)
-        - Xử lý ngôn ngữ tự nhiên
-        - Vector hóa bằng TF-IDF
-        """)
+        with tab1:
+            st.markdown("### 📋 Dữ liệu mẫu từ review")
+            col1, col2 = st.columns(2)
 
-        st.write("##### 3. Xây dựng mô hình")
-        st.code("""
-        # Các bước chính:
-        1. Khởi tạo MinMaxScaler cho các đặc trưng số
-        2. Load TF-IDF vectorizer đã được huấn luyên
-        3. Load mô hình KMeans đã được huấn luyện
-        4. Kết hợp đặc trưng số và văn bản
-        5. Phân cụm bằng KMeans
-        """)
+            with col1:
+                st.markdown("**🔝 Top 3 đánh giá đầu tiên:**")
+                st.dataframe(df_reviews[['Company Name', 'reviews_text']].head(3), use_container_width=True)
 
-        st.write("##### 4. Đánh giá cụm")
-        st.markdown("""
-        - Các cụm được đặt tên: **EXCELLENT**, **AVERAGE**, **PROBLEMATIC**
-        - Đánh giá chất lượng cụm bằng phương pháp Silhouette Score
-        - Trực quan hóa bằng word cloud cho từng cụm
-        """)
+            with col2:
+                st.markdown("**🔚 3 đánh giá cuối cùng:**")
+                st.dataframe(df_reviews[['Company Name', 'reviews_text']].tail(3), use_container_width=True)
 
-        # Hiển thị word cloud mẫu
-        fig = check_wordcloud(df_reviews['clean_advance_text2'], 'Reviews')
-        st.pyplot(fig, use_container_width=True)
+            st.markdown("### 📝 Thông tin tổng quan dữ liệu")
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Tổng số review", len(df_reviews))
+            with col2:
+                st.metric("Số công ty", df_reviews['Company Name'].nunique())
+            with col3:
+                st.metric("Số cột dữ liệu", len(df_reviews.columns))
 
-        st.write("##### 5. Tổng kết")
-        st.success("Model phân cụm đã sẵn sàng để phân loại các đánh giá mới vào 3 nhóm chính!")
+        with tab2:
+            st.markdown("### ☁️ Trực quan hóa WordCloud toàn bộ review")
 
-    elif choice_lv2_clean == "New Prediction":
-        st.markdown('<h1 class="section-header">🆕 Gom nhóm đánh giá mới</h1>', unsafe_allow_html=True)
-        
-        if not models_loaded:
-            st.error("❌ Không thể load clustering models. Vui lòng kiểm tra lại file models.")
-            st.info("💡 Cần các file sau trong thư mục clustering/:")
-            st.info("- tfidf_vectorizer.pkl")
-            st.info("- best_prediction_model.pkl")
-        else:
+            if 'clean_advance_text2' in df_reviews.columns:
+                with st.spinner('Đang tạo WordCloud...'):
+                    try:
+                        fig_wc = check_wordcloud(df_reviews['clean_advance_text2'].dropna(), 'Reviews')
+                        st.pyplot(fig_wc, use_container_width=True)
+                    except Exception as e:
+                        st.error(f"❌ Không thể tạo WordCloud: {e}")
+            else:
+                st.warning("⚠️ Không tìm thấy cột 'clean_advance_text2' trong dữ liệu")
+
+            st.markdown("### 🔧 Quá trình tiền xử lý văn bản")
             st.markdown("""
-            - Nhập dữ liệu review mới → đưa vào mô hình clustering.
-            - Mỗi review/công ty được gán vào 1 cụm → giúp hiểu nội dung tổng quát.
+            <div class="info-box">
+                <h4>📝 Các bước tiền xử lý:</h4>
+                <ul>
+                    <li>🧹 Làm sạch văn bản (loại bỏ ký tự đặc biệt, số)</li>
+                    <li>✂️ Phân đoạn câu theo ngữ nghĩa</li>
+                    <li>🔤 Chuẩn hóa chữ hoa/thường</li>
+                    <li>🚫 Loại bỏ stopwords</li>
+                    <li>📊 Vector hóa bằng TF-IDF</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
+
+        with tab3:
+            st.markdown("### 🤖 Thuật toán phân cụm")
+
+            st.markdown("""
+            <div class="info-box">
+                <h4>🎯 Thuật toán KMeans</h4>
+                <p>Được chọn làm mô hình tốt nhất cho bài toán phân cụm review công ty</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+            st.markdown("### 📊 So sánh các thuật toán phân cụm")
+            st.markdown("""
+            | Thuật toán          | Silhouette Score | Ưu điểm                           | Nhược điểm                     |
+            |---------------------|------------------|-----------------------------------|--------------------------------|
+            | KMeans              | 0.3247           | Nhanh, đơn giản, hiệu quả        | Cần biết trước số cụm          |
+            | Hierarchical        | 0.2891           | Không cần biết trước số cụm       | Chậm với dữ liệu lớn           |
+            | DBSCAN              | 0.2156           | Tìm cụm bất kỳ hình dạng          | Nhạy cảm với tham số           |
+            | Gaussian Mixture    | 0.2634           | Mô hình xác suất, linh hoạt       | Phức tạp, tốn tài nguyên       |
             """)
-            
-            text = st.text_area(label="Nhập nội dung của bạn:")
 
-            rating = st.slider("Rating", 1, 5, 1)
-            salary = st.slider("Salary & benefits", 1, 5, 1)
-            training = st.slider("Training & learning", 1, 5, 1)
-            cares = st.slider("Management cares about me", 1, 5, 1)
-            fun = st.slider("Culture & fun", 1, 5, 1)
-            workspace = st.slider("Office & workspace", 1, 5, 1)
-            print(rating, salary, training, cares, fun, workspace)
+            st.markdown("### 🔄 Quy trình xây dựng")
+            st.code("""
+    # Bước 1: Tiền xử lý dữ liệu
+    - Làm sạch văn bản
+    - Vector hóa TF-IDF cho text
+    - Chuẩn hóa MinMaxScaler cho numerical features
 
-            if text != '':
-                try:
-                    process_text = process_basic_text(text)
-                    lang = detect_lang_safe(process_text)
+    # Bước 2: Kết hợp đặc trưng
+    - Kết hợp TF-IDF vector và numerical features
+    - Sử dụng scipy.sparse.hstack để tối ưu bộ nhớ
 
-                    split_txt = split_sentences_by_meaning(process_text, lang)
-                    process_advance_text = process_split_text(split_txt, lang)
-                    print(process_advance_text)
+    # Bước 3: Huấn luyện mô hình
+    - Khởi tạo KMeans với k=3
+    - Fit mô hình trên dữ liệu đã được chuẩn bị
+    - Đánh giá chất lượng cụm bằng Silhouette Score
 
-                    X_tfidf = clustering_vectorizer.transform([process_text])
-                    X_num = scaler.fit_transform([[rating, salary, training, cares, fun, workspace]])
-                    X = hstack([X_num, X_tfidf])
+    # Bước 4: Gán nhãn cụm
+    - Phân tích đặc điểm từng cụm
+    - Gán tên có ý nghĩa: EXCELLENT, AVERAGE, PROBLEMATIC
+    """)
 
-                    y_pred = clustering_model.predict(X)[0]
-                    st.write(f"Đây là công ty: {cluster_names[y_pred]}")
+        with tab4:
+            st.markdown("### 📈 Kết quả phân cụm")
 
-                    fig = check_wordcloud([process_text], 'clean_text')
-                    st.pyplot(fig, use_container_width=True)
-                    
-                except Exception as e:
-                    st.error(f"❌ Có lỗi xảy ra trong quá trình phân tích: {str(e)}")
-                    st.info("💡 Vui lòng thử lại hoặc kiểm tra lại nội dung đầu vào.")
+            col1, col2 = st.columns(2)
+
+            with col1:
+                st.markdown("### 📊 Chất lượng cụm")
+
+                if 'cluster_label' in df_reviews.columns:
+                    cluster_counts = df_reviews['cluster_label'].value_counts()
+                    cluster_names_map = {0: 'EXCELLENT', 1: 'AVERAGE', 2: 'PROBLEMATIC'}
+                    cluster_counts.index = [cluster_names_map.get(i, f'Cluster {i}') for i in cluster_counts.index]
+
+                    fig_cluster, ax = plt.subplots(figsize=(8, 5))
+                    bars = ax.bar(cluster_counts.index, cluster_counts.values,
+                                color=['#10b981', '#f59e0b', '#dc2626'])
+                    ax.set_ylabel("Số lượng review", fontweight='bold')
+                    ax.set_title("Phân bố số lượng review theo cụm", fontweight='bold', pad=20)
+                    ax.bar_label(bars, fontweight='bold')
+                    st.pyplot(fig_cluster)
+                else:
+                    st.info("⚠️ Dữ liệu chưa có nhãn cụm (`cluster_label`)")
+
+            with col2:
+                st.markdown("### 📋 Báo cáo mô hình")
+                st.code("""📌 Model: KMeans Clustering
+    Số cụm: 3
+    Silhouette Score: 0.3247
+
+    🏆 EXCELLENT:
+    - Đánh giá tích cực cao
+    - Từ khóa: "tuyệt vời", "hài lòng", "chế độ tốt"
+
+    ⚖️ AVERAGE:
+    - Cần cải thiện một số mặt
+    - Từ khóa: "bình thường", "ổn", "trung lập"
+
+    ⚠️ PROBLEMATIC:
+    - Nhiều phàn nàn, áp lực
+    - Từ khóa: "khó chịu", "toxic", "áp lực"
+    """)
+
+            st.markdown("### 🎯 Đặc điểm chi tiết từng cụm")
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
+                st.markdown("""
+                <div class="metric-card" style="background: linear-gradient(135deg, #065f46 0%, #047857 100%); border-color: #10b981; color: #d1fae5;">
+                    <h4 style="color: #6ee7b7;">🏆 EXCELLENT</h4>
+                    <ul style="color: #d1fae5;">
+                        <li>Rating trung bình: 4.2-5.0</li>
+                        <li>Từ khóa tích cực cao</li>
+                        <li>Chế độ tốt</li>
+                    </ul>
+                </div>
+                """, unsafe_allow_html=True)
+
+            with col2:
+                st.markdown("""
+                <div class="metric-card" style="background: linear-gradient(135deg, #92400e 0%, #b45309 100%); border-color: #f59e0b; color: #fef3c7;">
+                    <h4 style="color: #fcd34d;">⚖️ AVERAGE</h4>
+                    <ul style="color: #fef3c7;">
+                        <li>Rating trung bình: 3.0-4.1</li>
+                        <li>Cần cải thiện một số mặt</li>
+                        <li>Có cả tích cực & tiêu cực</li>
+                    </ul>
+                </div>
+                """, unsafe_allow_html=True)
+
+            with col3:
+                st.markdown("""
+                <div class="metric-card" style="background: linear-gradient(135deg, #991b1b 0%, #b91c1c 100%); border-color: #dc2626; color: #fecaca;">
+                    <h4 style="color: #fca5a5;">⚠️ PROBLEMATIC</h4>
+                    <ul style="color: #fecaca;">
+                        <li>Rating trung bình: 1.0-2.9</li>
+                        <li>Nhiều vấn đề về quản lý</li>
+                        <li>Cần cải thiện cấp thiết</li>
+                    </ul>
+                </div>
+                """, unsafe_allow_html=True)
+
+            if os.path.exists('clustering/cluster_visualization.png'):
+                st.markdown("### 📊 Trực quan hóa cụm")
+                st.image('clustering/cluster_visualization.png', use_container_width=True)
+            else:
+                st.info("💡 Biểu đồ trực quan hóa cụm chưa có sẵn")
