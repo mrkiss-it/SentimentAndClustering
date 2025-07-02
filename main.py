@@ -25,7 +25,7 @@ except ImportError as e:
 
 # Cấu hình trang
 st.set_page_config(
-    page_title="Sentiment & Clustering Analysis",
+    page_title="Data Science and Machine Learning",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
