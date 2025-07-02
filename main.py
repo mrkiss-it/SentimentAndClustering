@@ -320,6 +320,35 @@ st.markdown("""
     ::-webkit-scrollbar-thumb:hover {
         background: #6b7280;
     }
+    
+    .main-header {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+    
+    .main-title {
+        color: white;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+            
+    .feature-title {
+        color: white;
+        font-size: 2rem;
+        font-weight: bold;
+    }
+            
+    .main-header {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -348,10 +377,15 @@ if df_reviews is None:
 
 ###### GUI ######
 # Header với thiết kế đẹp (giảm icon)
+if os.path.exists("channels4_banner.jpg"):
+        st.image("channels4_banner.jpg", use_container_width=True)
 st.markdown("""
 <div class="header-container">
-    <div class="header-title">Sentiment & Clustering Analysis</div>
-    <div class="header-subtitle">Phân tích cảm xúc và phân cụm thông tin từ đánh giá ITviec</div>
+    <div class="main-title">Đồ án tốt nghiệp - Data Science and Machine Learning</div>
+    <div class="feature-title">Clustering</div>
+    <div style="margin-top: 1rem;">
+        <div class="feature-title">Sentiment Analysis and Information</div>
+    </div>
 </div>
 """, unsafe_allow_html=True)
 
