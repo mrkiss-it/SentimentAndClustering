@@ -285,3 +285,48 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
                 st.image('clustering/cluster_visualization.png', use_container_width=True)
             else:
                 st.info("💡 Biểu đồ trực quan hóa cụm chưa có sẵn")
+                
+    elif choice_lv2_clean == "New Prediction":
+        st.markdown('<h1 class="section-header">🆕 Gom nhóm đánh giá mới</h1>', unsafe_allow_html=True)
+
+        if not models_loaded:
+            st.error("❌ Không thể load clustering models. Vui lòng kiểm tra lại file models.")
+            st.info("💡 Cần các file sau trong thư mục clustering/:")
+            st.info("- tfidf_vectorizer.pkl")
+            st.info("- best_prediction_model.pkl")
+        else:
+            st.markdown("""
+            - Nhập dữ liệu review mới → đưa vào mô hình clustering.
+            - Mỗi review/công ty được gán vào 1 cụm → giúp hiểu nội dung tổng quát.
+            """)
+
+            text = st.text_area(label="Nhập nội dung của bạn:")
+
+            rating = st.slider("Rating", 1, 5, 1)
+            salary = st.slider("Salary & benefits", 1, 5, 1)
+            training = st.slider("Training & learning", 1, 5, 1)
+            cares = st.slider("Management cares about me", 1, 5, 1)
+            fun = st.slider("Culture & fun", 1, 5, 1)
+            workspace = st.slider("Office & workspace", 1, 5, 1)
+
+            if text.strip() != '':
+                try:
+                    process_text = process_basic_text(text)
+                    lang = detect_lang_safe(process_text)
+                    split_txt = split_sentences_by_meaning(process_text, lang)
+                    process_advance_text = process_split_text(split_txt, lang)
+
+                    X_tfidf = clustering_vectorizer.transform([process_text])
+                    X_num = scaler.fit_transform([[rating, salary, training, cares, fun, workspace]])
+                    X = hstack([X_num, X_tfidf])
+
+                    y_pred = clustering_model.predict(X)[0]
+                    cluster_names = ['EXCELLENT', 'AVERAGE', 'PROBLEMATIC']
+                    st.success(f"🎯 Dự đoán: Công ty này thuộc nhóm **{cluster_names[y_pred]}**")
+
+                    fig = check_wordcloud([process_text], 'clean_text')
+                    st.pyplot(fig, use_container_width=True)
+
+                except Exception as e:
+                    st.error(f"❌ Có lỗi xảy ra trong quá trình phân tích: {str(e)}")
+                    st.info("💡 Vui lòng thử lại hoặc kiểm tra lại nội dung đầu vào.")

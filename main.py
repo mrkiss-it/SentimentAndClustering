@@ -472,10 +472,52 @@ st.markdown("---")
 
 # Footer căn giữa
 st.markdown("""
-<div style="text-align: center;">
-    <p><strong>Phát triển bởi:</strong></p>
-    <p>- Trần Hoàng Hôn - email1@gmail.com</p>
-    <p>- Trương Mai - trgmai98.dev@gmail.com</p>
-    <p><em>Made with ❤️ using Streamlit & Machine Learning</em></p>
+<style>
+.footer-container {
+    width: 100%;
+    margin: 40px auto;
+    padding: 25px;
+    border-radius: 12px;
+    background-color: #2c3e50;
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+    color: #ecf0f1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.footer-container h4 {
+    font-size: 18px;
+    font-weight: 600;
+}
+.footer-container .title {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #f1c40f;
+}
+.footer-container a {
+    color: #1abc9c;
+    text-decoration: none;
+}
+.footer-container a:hover {
+    text-decoration: underline;
+}
+.footer-container hr {
+    margin: 18px auto;
+    width: 60%;
+    border: 0.5px solid #7f8c8d;
+}
+.footer-container p {
+    margin: 6px 0;
+    font-size: 15px;
+}
+</style>
+
+<div class="footer-container">
+    <p class="title">🎓 Đồ án tốt nghiệp – Data Science & Machine Learning</p>
+    <h4>Phát triển bởi</h4>
+    <p>• <strong>Trần Hoàng Hôn</strong> – <a href="mailto:hoanghonhutech@gmail.com">hoanghonhutech@gmail.com</a></p>
+    <p>• <strong>Trương Mai</strong> – <a href="mailto:trgmai98.dev@gmail.com">trgmai98.dev@gmail.com</a></p>
+    <hr>
+    <p><em>Made with ❤️ using <strong>Streamlit</strong> & <strong>Machine Learning</strong></em></p>
 </div>
 """, unsafe_allow_html=True)
