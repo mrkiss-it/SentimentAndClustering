@@ -165,16 +165,16 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
             with col2:
                 st.markdown("### 📋 Báo cáo mô hình cuối cùng")
                 st.code('''📌 Model: StackingClassifier
-Cross-Validation Accuracy: 0.9804 (+/- 0.0029)
-Classification Report:
-              precision    recall  f1-score   support
-    negative       0.98      0.98      0.98       742
-     neutral       0.97      0.99      0.98       744
-    positive       0.98      0.95      0.97       745
+                        Cross-Validation Accuracy: 0.9804 (+/- 0.0029)
+                        Classification Report:
+                                    precision    recall  f1-score   support
+                            negative       0.98      0.98      0.98       742
+                            neutral       0.97      0.99      0.98       744
+                            positive       0.98      0.95      0.97       745
 
-    accuracy                           0.98      2231
-   macro avg       0.98      0.98      0.98      2231
-weighted avg       0.98      0.98      0.98      2231''')
+                            accuracy                           0.98      2231
+                        macro avg       0.98      0.98      0.98      2231
+                        weighted avg       0.98      0.98      0.98      2231''')
                 
                 # Hiển thị confusion matrix nếu có
                 if os.path.exists('sentiment/Confusion Matrix -  Stacking.png'):
@@ -239,12 +239,20 @@ weighted avg       0.98      0.98      0.98      2231''')
             selected_company = st.selectbox("Chọn công ty", company_list)
         else:
             search_text = st.text_input("Nhập tên công ty (gần đúng):")
-            matched_companies = difflib.get_close_matches(search_text, company_list, n=5, cutoff=0.3)
+            
+            lower_company_list = [c.lower() for c in company_list]
+            search_text_lower = search_text.lower()
+
+            matched_lowers = difflib.get_close_matches(search_text_lower, lower_company_list, n=10, cutoff=0.3)
+
+            matched_companies = [company_list[lower_company_list.index(m)] for m in matched_lowers]
+
             if matched_companies:
                 selected_company = st.selectbox("Chọn công ty phù hợp:", matched_companies)
             else:
                 selected_company = None
                 st.warning("❌ Không tìm thấy công ty phù hợp.")
+
 
         if selected_company:
             st.success(f"✅ Đang hiển thị thông tin cho: {selected_company}")
