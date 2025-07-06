@@ -51,16 +51,11 @@ import gdown
 import os
 from sentence_transformers import SentenceTransformer
 
-if not os.path.exists("clustering/sbert_model"):
-    gdown.download("https://drive.google.com/uc?id=1-wLKbW7CvIqJRyZQvMYDaeTGiyRTrjRa", "sentence_bert.zip", quiet=False)
-    import zipfile
-    with zipfile.ZipFile("sentence_bert.zip", 'r') as zip_ref:
-        zip_ref.extractall("clustering/sbert_model")
-
 if not os.path.exists("sentiment/stacking.pkl"):
     gdown.download("https://drive.google.com/uc?id=1fK7ItKl5GcJjxaw3M9IAP6gDyuQXstUz", "sentiment/stacking.pkl", quiet=False)
 
-embedding_model = SentenceTransformer("clustering/sbert_model")
+from sentence_transformers import SentenceTransformer
+embedding_model = SentenceTransformer("paraphrase-multilingual-mpnet-base-v2")
 
 num_cols = ['Salary & benefits', 'Training & learning', 'Culture & fun',
             'Office & workspace', 'Management cares about me']
