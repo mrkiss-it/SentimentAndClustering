@@ -328,8 +328,12 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
                     print('cluster ok.')
                     st.success(f"🎯 What I liked: Công ty này thuộc nhóm **{cluster_names[liked_cluster]}**")
 
-                    fig = check_wordcloud([process_text], 'What I liked')
-                    st.pyplot(fig, use_container_width=True)
+                    keywords = get_key_words([process_text])
+                    fig = check_wordcloud(keywords, 'What I liked')
+                    if fig:
+                        st.pyplot(fig, use_container_width=True)
+                    else:
+                        st.info("Không có từ khóa để hiển thị.")
 
                 except Exception as e:
                     st.error(f"❌ Có lỗi xảy ra trong quá trình phân tích: {str(e)}")
@@ -355,8 +359,12 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
                     print('cluster ok.')
                     st.success(f"🎯 Suggestions for improvement: Công ty này thuộc nhóm **{cluster_names[suggested_cluster]}**")
 
-                    fig = check_wordcloud([process_text], 'Suggestions for improvement')
-                    st.pyplot(fig, use_container_width=True)
+                    keywords = get_key_words([process_text])
+                    fig = check_wordcloud(keywords, 'Suggestions for improvement')
+                    if fig:
+                        st.pyplot(fig, use_container_width=True)
+                    else:
+                        st.info("Không có từ khóa để hiển thị.")
 
                 except Exception as e:
                     st.error(f"❌ Có lỗi xảy ra trong quá trình phân tích: {str(e)}")
