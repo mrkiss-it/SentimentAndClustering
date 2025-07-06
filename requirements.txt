@@ -15,4 +15,3 @@ transformers
 underthesea
 pyvi
 regex
-tqdm
