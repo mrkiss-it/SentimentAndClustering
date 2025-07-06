@@ -6,6 +6,7 @@ from scipy.sparse import hstack
 from sklearn.decomposition import TruncatedSVD
 import joblib
 import matplotlib.pyplot as plt
+import difflib
 
 # Import sentiment analysis functions với error handling
 try:
@@ -14,19 +15,6 @@ except ImportError as e:
     st.error(f"❌ Không thể import module: {e}")
 except Exception as e:
     st.error(f"❌ Lỗi khi import: {e}")
-
-def check_wordcloud(data, col_name):
-    """Tạo WordCloud từ dữ liệu text"""
-    text = " ".join(data)  # Gộp danh sách thành chuỗi
-    wc = WordCloud(width=800, height=400, background_color='white').generate(text)
-
-    # Tạo figure và vẽ WordCloud
-    fig, ax = plt.subplots(figsize=(10, 5))
-    ax.imshow(wc, interpolation='bilinear')
-    ax.axis("off")
-    ax.set_title("WordCloud của " + col_name, fontsize=16, fontweight='bold', pad=20)
-
-    return fig
 
 def information_clustering_app(choice_lv2_clean, df_reviews):
     """Main function cho Information Clustering app"""
@@ -110,11 +98,13 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
 
             with col1:
                 st.markdown("**🔝 Top 3 đánh giá đầu tiên:**")
-                st.dataframe(df_reviews[['Company Name', 'What I liked', 'Suggestions for improvement']].head(3), use_container_width=True)
+                columns_to_display = ['Company Name', 'What I liked', 'Suggestions for improvement'] + num_cols
+                st.dataframe(df_reviews[columns_to_display].head(3), use_container_width=True)
 
             with col2:
                 st.markdown("**🔚 3 đánh giá cuối cùng:**")
-                st.dataframe(df_reviews[['Company Name', 'What I liked', 'Suggestions for improvement']].tail(3), use_container_width=True)
+                columns_to_display = ['Company Name', 'What I liked', 'Suggestions for improvement'] + num_cols
+                st.dataframe(df_reviews[columns_to_display].tail(3), use_container_width=True)
 
             st.markdown("### 📝 Thông tin tổng quan dữ liệu")
             col1, col2, col3 = st.columns(3)
@@ -174,34 +164,35 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
             """)
 
             st.markdown("### 🔄 Quy trình xây dựng")
-            st.write("""
-                #####📌 1. Xử lý dữ liệu văn bản & số
-                - Làm sạch và điền giá trị thiếu cho 2 cột:
-                    - 'What I liked_procced'
-                    - 'Suggestions for improvement_procced'
-                - Xử lý dữ liệu số (Salary, Training, Culture,...) bằng StandardScaler
-            
-                #####📌 2. Sinh embedding Sentence-BERT
-                    - Dùng mô hình paraphrase-multilingual-mpnet-base-v2
+
+            st.markdown("""
+                ##### 📌 1. Xử lý dữ liệu văn bản & số
+                    - **Làm sạch và điền giá trị thiếu** cho 2 cột:
+                      - `'What I liked_procced'`
+                      - `'Suggestions for improvement_procced'`
+                    - **Xử lý dữ liệu số** (Salary, Training, Culture,...) bằng StandardScaler
+                
+                ##### 📌 2. Sinh embedding Sentence-BERT
+                    - Dùng mô hình `paraphrase-multilingual-mpnet-base-v2`
                     - Hỗ trợ tiếng Việt tốt
                     - Tối ưu bằng batch và GPU
                 
-                #####📌 3. Giảm chiều bằng TruncatedSVD
-                    - Kết hợp embedding + dữ liệu số ➝ giảm chiều
+                ##### 📌 3. Giảm chiều bằng TruncatedSVD
+                    - Kết hợp embedding + dữ liệu số → giảm chiều
                     - Giúp tăng tốc và tránh curse of dimensionality
                     - Lưu lại tỷ lệ variance explained
-            
-                #####📌 4. So sánh mô hình clustering
-                - Chạy 3 thuật toán: KMeans, Agglomerative, DBSCAN
-                - Đánh giá qua 3 metric:
-                    - Silhouette Score
-                    - Davies-Bouldin Score
-                    - Calinski-Harabasz Score
-                - Chọn mô hình tốt nhất cho từng phần (liked / suggested)
-            
-                #####📌 5. Lưu kết quả phân cụm
-                - Gán liked_cluster và suggested_cluster vào DataFrame
-                - Xuất ra file Excel
+                
+                ##### 📌 4. So sánh mô hình clustering
+                    - **Chạy 3 thuật toán:** KMeans, Agglomerative, DBSCAN
+                    - **Đánh giá qua 3 metric:**
+                      - Silhouette Score
+                      - Davies-Bouldin Score
+                      - Calinski-Harabasz Score
+                    - **Chọn mô hình tốt nhất** cho từng phần (liked / suggested)
+                
+                ##### 📌 5. Lưu kết quả phân cụm
+                    - Gán `liked_cluster` và `suggested_cluster` vào DataFrame
+                    - Xuất ra file Excel
             """)
 
         with tab4:
@@ -247,18 +238,20 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
 
             with col3:
                 st.markdown("### 📋 Báo cáo mô hình")
-                st.code("""📌 Model: KMeans Clustering
-    Số cụm: 3
-    Silhouette Score: 0.3247
 
-    🏆 Hài lòng:
-    - Đánh giá tích cực cao
-    - Từ khóa: "tuyệt vời", "hài lòng", "chế độ tốt"
-
-    ⚖️ Ít hài lòng:
-    - Cần cải thiện một số mặt
-    - Từ khóa: "bình thường", "ổn", "trung lập"
-""")
+                st.markdown("""
+                ##### 📌 Model: KMeans Clustering
+                    - **Số cụm:** 3
+                    - **Silhouette Score:** 0.3247
+                
+                ##### 🏆 Hài lòng
+                    - **Đánh giá tích cực cao**
+                    - **Từ khóa:** "tuyệt vời", "hài lòng", "chế độ tốt"
+                
+                ##### ⚖️ Ít hài lòng
+                    - **Cần cải thiện một số mặt**
+                    - **Từ khóa:** "bình thường", "ổn", "trung lập"
+                """)
 
             st.markdown("### 🎯 Đặc điểm chi tiết từng cụm")
             col1, col2 = st.columns(2)
@@ -277,15 +270,15 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
 
             with col2:
                 st.markdown("""
-                <div class="metric-card" style="background: linear-gradient(135deg, #92400e 0%, #b45309 100%); border-color: #f59e0b; color: #fef3c7;">
-                    <h4 style="color: #fcd34d;">⚖️ Ít hài lòng</h4>
-                    <ul style="color: #fef3c7;">
-                        <li>Rating trung bình: < 4.0</li>
-                        <li>Cần cải thiện một số mặt</li>
-                        <li>Có cả tích cực & tiêu cực</li>
-                    </ul>
-                </div>
-                """, unsafe_allow_html=True)
+                    <div class="metric-card" style="background: linear-gradient(135deg, #92400e 0%, #b45309 100%); border-color: #f59e0b; color: #fef3c7;">
+                        <h4 style="color: #fcd34d;">⚖️ Ít hài lòng</h4>
+                        <ul style="color: #fef3c7; list-style-type: none; padding-left: 0;">
+                            <li>Rating trung bình: < 4.0</li>
+                            <li>Cần cải thiện một số mặt</li>
+                            <li>Có cả tích cực & tiêu cực</li>
+                        </ul>
+                    </div>
+                    """, unsafe_allow_html=True)
 
             if os.path.exists('clustering/cluster_visualization.png'):
                 st.markdown("### 📊 Trực quan hóa cụm")
@@ -368,3 +361,111 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
                 except Exception as e:
                     st.error(f"❌ Có lỗi xảy ra trong quá trình phân tích: {str(e)}")
                     st.info("💡 Vui lòng thử lại hoặc kiểm tra lại nội dung đầu vào.")
+
+
+            st.markdown("---")
+
+            # Phần phân tích theo phân cụm - giữ nguyên pattern từ file gốc
+            st.subheader("🎯 Phân tích theo phân cụm")
+
+            company_list = df_reviews['Company Name'].dropna().unique().tolist()
+            company_list.sort()
+
+            search_type = st.radio("Chọn cách tìm công ty:", ['Chọn từ danh sách', 'Nhập tên gần đúng'])
+
+            if search_type == 'Chọn từ danh sách':
+                selected_company = st.selectbox("Chọn công ty", company_list)
+            else:
+                search_text = st.text_input("Nhập tên công ty (gần đúng):")
+
+                lower_company_list = [c.lower() for c in company_list]
+                search_text_lower = search_text.lower()
+
+                matched_lowers = difflib.get_close_matches(search_text_lower, lower_company_list, n=10, cutoff=0.3)
+
+                matched_companies = [company_list[lower_company_list.index(m)] for m in matched_lowers]
+
+                if matched_companies:
+                    selected_company = st.selectbox("Chọn công ty phù hợp:", matched_companies)
+                else:
+                    selected_company = None
+                    st.warning("❌ Không tìm thấy công ty phù hợp.")
+
+            if selected_company:
+                st.success(f"✅ Đang hiển thị thông tin cho: {selected_company}")
+
+                df_company = df_reviews[df_reviews['Company Name'] == selected_company].copy()
+
+                # Chọn loại phân cụm
+                cluster_type = st.radio("Chọn loại phân cụm:", ['Liked Cluster', 'Suggested Cluster'])
+
+                if cluster_type == 'Liked Cluster':
+                    cluster_data = 'What I liked'
+                    cluster_column = 'liked_cluster'
+                    cluster_title = "cụm Liked"
+                else:
+                    cluster_data = 'Suggestions for improvement'
+                    cluster_column = 'suggested_cluster'
+                    cluster_title = "cụm Suggested"
+
+                # Kiểm tra xem có cột cluster không
+                if cluster_column in df_company.columns:
+                    cluster_list = df_company[cluster_column].dropna().unique().tolist()
+                    cluster_list.sort()
+                    cluster_mapping = {cluster_names[i] : cluster_list[i] for i in range(len(cluster_list))}
+
+                    selected_cluster = st.selectbox(f"Chọn {cluster_title} để phân tích:", list(cluster_mapping.keys()))
+
+                    if selected_cluster is not None:
+                        st.success(f"✅ Đang hiển thị thông tin cho {cluster_title}: {selected_cluster}")
+
+                        df_cluster = df_company[df_company[cluster_column] == cluster_mapping.get(selected_cluster)].copy()
+
+                        # 1. Tổng quan
+                        st.markdown(f"**Số lượng đánh giá:** {len(df_cluster)}")
+
+                        # 2. Tỷ lệ cảm xúc
+                        sentiment_counts = df_cluster['Setiment_FN'].value_counts(normalize=True).mul(100).round(2)
+                        st.write("### 📊 Tỷ lệ cảm xúc:")
+                        st.bar_chart(sentiment_counts)
+
+                        # 3. WordCloud
+                        liked_key_words = get_key_words(df_cluster[cluster_data + '_procced'])
+                        fig_liked = check_wordcloud(liked_key_words, cluster_data)
+                        if fig_liked:
+                            st.pyplot(fig_liked, use_container_width=True)
+                        else:
+                            st.info("Không có từ khóa để hiển thị.")
+
+                        # 4. Top từ khóa theo cảm xúc
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            st.write("#### 🔴 Từ tiêu cực:")
+                            neg_df = df_cluster[df_cluster['Setiment_FN'] == 'negative']
+                            suggest_key_words = get_key_words(neg_df['Suggestions for improvement_procced'])
+                            fig_negative = check_wordcloud(suggest_key_words, 'negative')
+                            if fig_negative:
+                                st.pyplot(fig_negative, use_container_width=True)
+                            else:
+                                st.info("Không có từ khóa để hiển thị.")
+
+                        with col2:
+                            st.write("#### 🟢 Từ tích cực:")
+                            pos_df = df_cluster[df_cluster['Setiment_FN'] == 'positive']
+                            liked_key_words = get_key_words(pos_df['What I liked_procced'])
+                            fig_positive = check_wordcloud(liked_key_words, 'positive')
+                            if fig_positive:
+                                st.pyplot(fig_positive, use_container_width=True)
+                            else:
+                                st.info("Không có từ khóa để hiển thị.")
+
+                        # 5. Danh sách review (có thể ẩn/hiện)
+                        with st.expander("📄 Danh sách đánh giá (ẩn/hiện)"):
+                            cluster_mapping = {cluster_list[i] : cluster_names[i] for i in range(len(cluster_list))}
+                            df_display = df_cluster.copy()
+                            df_display[cluster_column] = df_display[cluster_column].map(cluster_mapping)
+                            columns_to_display = [cluster_data, 'Setiment_FN'] + num_cols + [cluster_column]
+                            st.dataframe(df_display[columns_to_display])
+
+                else:
+                    st.warning(f"❌ Không tìm thấy cột '{cluster_column}' trong dữ liệu. Vui lòng kiểm tra lại dữ liệu đầu vào.")

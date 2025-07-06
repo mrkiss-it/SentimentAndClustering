@@ -150,16 +150,16 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
             with col2:
                 st.markdown("### 📋 Báo cáo mô hình cuối cùng")
                 st.code('''📌📌 Cross-Validation Accuracy: 0.9695 (+/- 0.0034)
-                            📊 Classification Report for Stacking Model:
-                                          precision    recall  f1-score   support
-                            
-                                negative       0.97      0.98      0.98       603
-                                 neutral       0.98      1.00      0.99       617
-                                positive       0.98      0.95      0.97       616
-                            
-                                accuracy                           0.98      1836
-                               macro avg       0.98      0.98      0.98      1836
-                            weighted avg       0.98      0.98      0.98      1836''')
+📊 Classification Report for Stacking Model:
+              precision    recall  f1-score   support
+
+    negative       0.97      0.98      0.98       603
+     neutral       0.98      1.00      0.99       617
+    positive       0.98      0.95      0.97       616
+
+    accuracy                           0.98      1836
+   macro avg       0.98      0.98      0.98      1836
+weighted avg       0.98      0.98      0.98      1836''')
                 
                 # Hiển thị confusion matrix nếu có
                 if os.path.exists('sentiment/Confusion Matrix -  Stacking.png'):
