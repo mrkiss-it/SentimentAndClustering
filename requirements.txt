@@ -17,4 +17,6 @@ pyvi
 regex
 openpyxl
 yake
-
+summa
+gdown
+difflib
