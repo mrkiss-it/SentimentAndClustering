@@ -47,11 +47,9 @@ from summa import keywords as textrank_keywords
 import joblib
 from pathlib import Path
 from sklearn.metrics.pairwise import cosine_similarity
-import os
-import gdown  # pip install gdown
-
 import gdown
 import os
+import sentence_transformers as SentenceTransformer
 
 if not os.path.exists("clustering/keybert_model.pkl"):
     gdown.download("https://drive.google.com/uc?id=1uA7PiqRpec_Da9K3TxSsU3TGkrFT0AQq", "clustering/keybert_model.pkl", quiet=False)
@@ -62,6 +60,8 @@ if not os.path.exists("clustering/sentence_bert.pkl"):
 if not os.path.exists("sentiment/stacking.pkl"):
     gdown.download("https://drive.google.com/uc?id=1fK7ItKl5GcJjxaw3M9IAP6gDyuQXstUz", "sentiment/stacking.pkl", quiet=False)
 
+embedding_model = SentenceTransformer('paraphrase-multilingual-mpnet-base-v2')
+joblib.dump(embedding_model, "clustering/sentence_bert.pkl")
 
 embedding_model = joblib.load("clustering/sentence_bert.pkl")
 kw_model = joblib.load("clustering/keybert_model.pkl")
