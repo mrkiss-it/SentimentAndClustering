@@ -356,10 +356,10 @@ st.markdown("""
 @st.cache_data
 def load_data():
     try:
-        if os.path.exists('processed_reviews.xlsx'):
-            return pd.read_excel('processed_reviews.xlsx')
+        if os.path.exists('sentiment_reviews_clustered.xlsx'):
+            return pd.read_excel('sentiment_reviews_clustered.xlsx')
         else:
-            st.error("Không tìm thấy file 'processed_reviews.xlsx'")
+            st.error("Không tìm thấy file 'sentiment_reviews_clustered.xlsx'")
             return None
     except Exception as e:
         st.error(f"Lỗi khi đọc dữ liệu: {e}")
@@ -460,14 +460,14 @@ if choice_lv1 == 'Tổng quan':
         with col2:
             st.metric("Số công ty", f"{df_reviews['Company Name'].nunique():,}")
         with col3:
-            if 'reviews_text' in df_reviews.columns:
-                avg_length = df_reviews['reviews_text'].str.len().mean()
+            if 'combined_text' in df_reviews.columns:
+                avg_length = df_reviews['combined_text'].str.len().mean()
                 st.metric("Độ dài TB", f"{avg_length:.0f} ký tự")
             else:
                 st.metric("Độ dài TB", "N/A")
         with col4:
-            if 'reviews_text' in df_reviews.columns:
-                avg_words = df_reviews['reviews_text'].str.split().str.len().mean()
+            if 'combined_text' in df_reviews.columns:
+                avg_words = df_reviews['combined_text'].str.split().str.len().mean()
                 st.metric("Từ TB/review", f"{avg_words:.0f} từ")
             else:
                 st.metric("Từ TB/review", "N/A")
@@ -476,11 +476,10 @@ if choice_lv1 == 'Tổng quan':
         st.markdown('<h3 class="section-header">Mẫu dữ liệu</h3>', unsafe_allow_html=True)
         
         col1, col2 = st.columns(2)
+        display_cols = ['Company Name', 'What I liked', 'Suggestions for improvement']
         with col1:
             st.markdown("**Top 5 đánh giá đầu tiên:**")
-            display_cols = ['Company Name', 'reviews_text'] if 'reviews_text' in df_reviews.columns else df_reviews.columns[:2]
             st.dataframe(df_reviews[display_cols].head(5), use_container_width=True)
-        
         with col2:
             st.markdown("**5 đánh giá cuối cùng:**")
             st.dataframe(df_reviews[display_cols].tail(5), use_container_width=True)

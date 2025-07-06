@@ -1,44 +1,28 @@
-import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-from wordcloud import WordCloud
+import streamlit as st
 import os
 import difflib
-import numpy as np
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 from scipy.sparse import hstack, csr_matrix
 import joblib
 
 # Import sentiment analysis functions với error handling
 try:
-    from sentiment.sentiment_analysis import *
+    from project_final import *
 except ImportError as e:
     st.error(f"❌ Không thể import sentiment analysis module: {e}")
 except Exception as e:
     st.error(f"❌ Lỗi khi import: {e}")
 
-def check_wordcloud(data, col_name):
-    """Tạo WordCloud từ dữ liệu text"""
-    text = " ".join(data)  # Gộp danh sách thành chuỗi
-    wc = WordCloud(width=800, height=400, background_color='white').generate(text)
-
-    # Tạo figure và vẽ WordCloud
-    fig, ax = plt.subplots(figsize=(10, 5))
-    ax.imshow(wc, interpolation='bilinear')
-    ax.axis("off")
-    ax.set_title("WordCloud của " + col_name, fontsize=16, fontweight='bold', pad=20)
-
-    return fig
-
 def sentiment_analysis_app(choice_lv2_clean, df_reviews):
     """Main function cho Sentiment Analysis app"""
     
     # Load models theo pattern từ file gốc
-    scaler = MinMaxScaler()
+    scaler = StandardScaler(with_mean=False)
     
     try:
-        vectorizer = joblib.load("sentiment/tfidf_vectorizer2.pkl")
-        model_final = joblib.load("sentiment/stacking_model.pkl")
+        vectorizer = joblib.load("sentiment/tfidf_vectorizer.pkl")
+        model_final = joblib.load("sentiment/stacking.pkl")
         models_loaded = True
     except FileNotFoundError as e:
         st.error(f"❌ Không tìm thấy file model: {e}")
@@ -93,11 +77,10 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
             st.markdown("### 📋 Dữ liệu mẫu từ review")
             
             col1, col2 = st.columns(2)
+            display_cols = ['Company Name', 'What I liked', 'Suggestions for improvement']
             with col1:
                 st.markdown("**🔝 Top 3 đánh giá đầu tiên:**")
-                display_cols = ['Company Name', 'reviews_text'] if 'reviews_text' in df_reviews.columns else df_reviews.columns[:2]
                 st.dataframe(df_reviews[display_cols].head(3), use_container_width=True)
-            
             with col2:
                 st.markdown("**🔚 3 đánh giá cuối cùng:**")
                 st.dataframe(df_reviews[display_cols].tail(3), use_container_width=True)
@@ -105,29 +88,30 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
         with tab2:
             st.markdown("### ☁️ Trực quan hóa WordCloud toàn bộ review")
             
-            if 'clean_advance_text2' in df_reviews.columns:
+            if 'clean_advance_text' in df_reviews.columns:
                 with st.spinner('Đang tạo WordCloud...'):
                     try:
-                        fig_wc = check_wordcloud(df_reviews['clean_advance_text2'].dropna(), 'Reviews')
+                        keywords = get_key_words(df_reviews['clean_advance_text'].dropna())
+                        fig_wc = check_wordcloud(keywords, 'Reviews')
                         st.pyplot(fig_wc, use_container_width=True)
                     except Exception as e:
                         st.error(f"❌ Không thể tạo WordCloud: {e}")
                         st.info("💡 Vui lòng kiểm tra dữ liệu text")
             else:
-                st.warning("⚠️ Không tìm thấy cột 'clean_advance_text2' trong dữ liệu")
+                st.warning("⚠️ Không tìm thấy cột 'clean_advance_text' trong dữ liệu")
 
         with tab3:
             st.markdown("### 🤖 Các mô hình đã huấn luyện và so sánh")
             
             # Bảng so sánh theo pattern từ file gốc
             st.markdown("""
-        | Mô hình             | Accuracy | Ưu điểm                           | Nhược điểm                     |
-        |---------------------|----------|-----------------------------------|--------------------------------|
-        | Naive Bayes         | 0.8237   | Nhanh, đơn giản                   | Độ chính xác thấp              |
-        | Logistic Regression | 0.9448   | Dễ triển khai, giải thích được    | Không xử lý phi tuyến tốt      |
-        | SVM                 | 0.9529   | Phân biệt tốt                     | Tốn tài nguyên, chậm           |
-        | Random Forest       | 0.9643   | Chính xác cao, chống overfit tốt  | Có thể hơi chậm khi scale lớn  |
-        """)
+                | Mô hình             | Accuracy | Ưu điểm                           | Nhược điểm                     |
+                |---------------------|----------|-----------------------------------|--------------------------------|
+                | Naive Bayes         | 0.8346   | Nhanh, đơn giản                   | Độ chính xác thấp              |
+                | Logistic Regression | 0.9342   | Dễ triển khai, giải thích được    | Không xử lý phi tuyến tốt      |
+                | SVM                 | 0.9469   | Phân biệt tốt                     | Tốn tài nguyên, chậm           |
+                | Random Forest       | 0.9563   | Chính xác cao, chống overfit tốt  | Có thể hơi chậm khi scale lớn  |
+            """)
             
             st.markdown("""
             <div class="info-box">
@@ -149,7 +133,7 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
             with col1:
                 st.markdown("### 📊 So sánh Accuracy")
                 model_names = ["Naive Bayes", "Logistic Regression", "SVM", "Random Forest", "Stacking"]
-                accuracies = [0.8237, 0.9448, 0.9529, 0.9643, 0.9804]
+                accuracies = [0.8346, 0.9342, 0.9469, 0.9563, 0.9695]
                 
                 fig_acc, ax = plt.subplots(figsize=(10, 6))
                 bars = ax.bar(model_names, accuracies, 
@@ -164,17 +148,17 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
             
             with col2:
                 st.markdown("### 📋 Báo cáo mô hình cuối cùng")
-                st.code('''📌 Model: StackingClassifier
-                        Cross-Validation Accuracy: 0.9804 (+/- 0.0029)
-                        Classification Report:
-                                    precision    recall  f1-score   support
-                            negative       0.98      0.98      0.98       742
-                            neutral       0.97      0.99      0.98       744
-                            positive       0.98      0.95      0.97       745
-
-                            accuracy                           0.98      2231
-                        macro avg       0.98      0.98      0.98      2231
-                        weighted avg       0.98      0.98      0.98      2231''')
+                st.code('''📌📌 Cross-Validation Accuracy: 0.9695 (+/- 0.0034)
+                            📊 Classification Report for Stacking Model:
+                                          precision    recall  f1-score   support
+                            
+                                negative       0.97      0.98      0.98       603
+                                 neutral       0.98      1.00      0.99       617
+                                positive       0.98      0.95      0.97       616
+                            
+                                accuracy                           0.98      1836
+                               macro avg       0.98      0.98      0.98      1836
+                            weighted avg       0.98      0.98      0.98      1836''')
                 
                 # Hiển thị confusion matrix nếu có
                 if os.path.exists('sentiment/Confusion Matrix -  Stacking.png'):
@@ -188,8 +172,8 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
         if not models_loaded:
             st.error("❌ Không thể load models. Vui lòng kiểm tra lại file models.")
             st.info("💡 Cần các file sau trong thư mục sentiment/:")
-            st.info("- tfidf_vectorizer2.pkl")
-            st.info("- stacking_model.pkl")
+            st.info("- tfidf_vectorizer.pkl")
+            st.info("- stacking.pkl")
         else:
             # Phần nhập text theo pattern từ file gốc
             text = st.text_area(label="Nhập nội dung của bạn:")
@@ -212,14 +196,13 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
 
                     y_pred = model_final.predict(X)[0]
                     st.write(f"Kết quả dự đoán là: {y_pred}")
-                    
-                    if y_pred == 'positive':
-                        st.write(", ".join([x.strip() for x in pos_words if x.strip() != "" and x.lower() in process_text.lower()]))
-                    elif y_pred == 'negative':
-                        st.write(", ".join([x.strip() for x in neg_words if x.strip() != "" and x.lower() in process_text.lower()]))
 
-                    fig = check_wordcloud([process_advance_text], 'Content')
-                    st.pyplot(fig, use_container_width=True)
+                    keywords = get_key_words([process_advance_text])
+                    fig = check_wordcloud(keywords, 'Content')
+                    if fig:
+                        st.pyplot(fig, use_container_width=True)
+                    else:
+                        st.info("Không có từ khóa để hiển thị.")
                         
                 except Exception as e:
                     st.error(f"❌ Lỗi khi phân tích: {e}")
@@ -257,56 +240,56 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
         if selected_company:
             st.success(f"✅ Đang hiển thị thông tin cho: {selected_company}")
 
-            df_company = df_reviews[df_reviews['Company Name'] == selected_company]
+            df_company = df_reviews[df_reviews['Company Name'] == selected_company].copy()
 
             # 1. Tổng quan
             st.markdown(f"**Số lượng đánh giá:** {len(df_company)}")
 
             # 2. Tỷ lệ cảm xúc
-            sentiment_counts = df_company['Pred_FN'].value_counts(normalize=True).mul(100).round(2)
+            sentiment_counts = df_company['Setiment_FN'].value_counts(normalize=True).mul(100).round(2)
             st.write("### 📊 Tỷ lệ cảm xúc:")
             st.bar_chart(sentiment_counts)
 
             # 3. WordCloud
-            fig_wc = check_wordcloud(df_company['clean_advance_text2'], 'Reviews')
-            st.pyplot(fig_wc, use_container_width=True)
+            col1, col2 = st.columns(2)
+            with col1:
+                liked_key_words = get_key_words(df_company['What I liked_procced'])
+                fig_liked = check_wordcloud(liked_key_words, 'What I liked')
+                if fig_liked:
+                    st.pyplot(fig_liked, use_container_width=True)
+                else:
+                    st.info("Không có từ khóa để hiển thị.")
+
+            with col2:
+                suggest_key_words = get_key_words(df_company['Suggestions for improvement_procced'])
+                fig_suggestions = check_wordcloud(suggest_key_words, 'Suggestions for improvement')
+                if fig_suggestions:
+                    st.pyplot(fig_suggestions, use_container_width=True)
+                else:
+                    st.info("Không có từ khóa để hiển thị.")
 
             # 4. Top từ khóa theo cảm xúc
             col1, col2 = st.columns(2)
             with col1:
                 st.write("#### 🔴 Từ tiêu cực:")
-                neg_df = df_company[df_company['Pred_FN'] == 'negative']
-                neg_texts = " ".join(neg_df['clean_advance_text2'].dropna().astype(str))
-
-                if neg_texts.strip():
-                    try:
-                        fig_neg, ax = plt.subplots(figsize=(8, 4))
-                        wc_neg = WordCloud(width=800, height=400, background_color='white').generate(neg_texts)
-                        ax.imshow(wc_neg, interpolation='bilinear')
-                        ax.axis("off")
-                        st.pyplot(fig_neg)
-                    except ValueError as e:
-                        st.warning("❌ Không đủ từ để tạo WordCloud tiêu cực.")
+                neg_df = df_company[df_company['Setiment_FN'] == 'negative']
+                suggest_key_words = get_key_words(neg_df['Suggestions for improvement_procced'])
+                fig_negative = check_wordcloud(suggest_key_words, 'negative')
+                if fig_negative:
+                    st.pyplot(fig_negative, use_container_width=True)
                 else:
-                    st.info("💬 Không có review tiêu cực nào.")
+                    st.info("Không có từ khóa để hiển thị.")
 
             with col2:
                 st.write("#### 🟢 Từ tích cực:")
-                pos_df = df_company[df_company['Pred_FN'] == 'positive']
-                pos_texts = " ".join(pos_df['clean_advance_text2'].dropna().astype(str))
-
-                if pos_texts.strip():
-                    try:
-                        fig_pos, ax = plt.subplots(figsize=(8, 4))
-                        wc_pos = WordCloud(width=800, height=400, background_color='white').generate(pos_texts)
-                        ax.imshow(wc_pos, interpolation='bilinear')
-                        ax.axis("off")
-                        st.pyplot(fig_pos)
-                    except ValueError as e:
-                        st.warning("❌ Không đủ từ để tạo WordCloud tích cực.")
+                pos_df = df_company[df_company['Setiment_FN'] == 'positive']
+                liked_key_words = get_key_words(pos_df['What I liked_procced'])
+                fig_positive = check_wordcloud(liked_key_words, 'positive')
+                if fig_positive:
+                    st.pyplot(fig_positive, use_container_width=True)
                 else:
-                    st.info("💬 Không có review tích cực nào.")
+                    st.info("Không có từ khóa để hiển thị.")
 
             # 5. Danh sách review (có thể ẩn/hiện)
             with st.expander("📄 Danh sách đánh giá (ẩn/hiện)"):
-                st.dataframe(df_company[['clean_basic_text', 'Pred_FN']])
+                st.dataframe(df_company[['What I liked', 'Suggestions for improvement', 'Setiment_FN']])

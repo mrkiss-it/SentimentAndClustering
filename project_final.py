@@ -49,12 +49,20 @@ from pathlib import Path
 import torch
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
+from keybert import KeyBERT
+import os
+import gdown  # pip install gdown
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-print(f"Sử dụng device: {device}")
+if not os.path.exists("clustering/keybert_model.pkl"):
+    gdown.download("https://drive.google.com/file/d/1uA7PiqRpec_Da9K3TxSsU3TGkrFT0AQq/view?usp=drive_link", "clustering/keybert_model.pkl", quiet=False)
+if not os.path.exists("clustering/sentence_bert.pkl"):
+    gdown.download("https://drive.google.com/file/d/1H7_KROPikN6ru4lccn7H7b3Iacbw6-xU/view?usp=drive_link", "clustering/sentence_bert.pkl", quiet=False)
+if not os.path.exists("sentiment/stacking.pkl"):
+    gdown.download("https://drive.google.com/file/d/1fK7ItKl5GcJjxaw3M9IAP6gDyuQXstUz/view?usp=sharing", "sentiment/stacking.pkl", quiet=False)
 
-embedding_model = SentenceTransformer('paraphrase-multilingual-mpnet-base-v2', device=device)
-kw_model = joblib.load('clustering/keybert_model.pkl')
+
+embedding_model = joblib.load("clustering/sentence_bert.pkl")
+kw_model = joblib.load("clustering/keybert_model.pkl")
 
 num_cols = ['Salary & benefits', 'Training & learning', 'Culture & fun',
             'Office & workspace', 'Management cares about me']
