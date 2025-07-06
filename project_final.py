@@ -46,10 +46,7 @@ from summa import keywords as textrank_keywords
 # Lưu mô hình
 import joblib
 from pathlib import Path
-import torch
-from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
-from keybert import KeyBERT
 import os
 import gdown  # pip install gdown
 

@@ -210,7 +210,7 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
             col1, col2, col3 = st.columns(3)
 
             with col1:
-                st.markdown("### 📊 Chất lượng cụm 'What I liked'")
+                st.markdown("### 📊 What I liked")
 
                 if 'liked_cluster' in df_reviews.columns:
                     cluster_counts = df_reviews['liked_cluster'].value_counts()
@@ -228,7 +228,7 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
                     st.info("⚠️ Dữ liệu chưa có nhãn cụm (`liked_cluster`)")
 
             with col2:
-                st.markdown("### 📊 Chất lượng cụm 'Suggestions for improvement'")
+                st.markdown("### 📊 Suggestions for improvement")
 
                 if 'suggested_cluster' in df_reviews.columns:
                     cluster_counts = df_reviews['suggested_cluster'].value_counts()
@@ -248,20 +248,20 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
             with col3:
                 st.markdown("### 📋 Báo cáo mô hình")
                 st.code("""📌 Model: KMeans Clustering
-                    Số cụm: 3
-                    Silhouette Score: 0.3247
-                
-                    🏆 Hài lòng:
-                    - Đánh giá tích cực cao
-                    - Từ khóa: "tuyệt vời", "hài lòng", "chế độ tốt"
-                
-                    ⚖️ Ít hài lòng:
-                    - Cần cải thiện một số mặt
-                    - Từ khóa: "bình thường", "ổn", "trung lập"
-                """)
+    Số cụm: 3
+    Silhouette Score: 0.3247
+
+    🏆 Hài lòng:
+    - Đánh giá tích cực cao
+    - Từ khóa: "tuyệt vời", "hài lòng", "chế độ tốt"
+
+    ⚖️ Ít hài lòng:
+    - Cần cải thiện một số mặt
+    - Từ khóa: "bình thường", "ổn", "trung lập"
+""")
 
             st.markdown("### 🎯 Đặc điểm chi tiết từng cụm")
-            col1, col2 = st.columns(3)
+            col1, col2 = st.columns(2)
 
             with col1:
                 st.markdown("""

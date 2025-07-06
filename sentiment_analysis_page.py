@@ -5,6 +5,7 @@ import difflib
 from sklearn.preprocessing import StandardScaler
 from scipy.sparse import hstack, csr_matrix
 import joblib
+import matplotlib.pyplot as plt
 
 # Import sentiment analysis functions với error handling
 try:
