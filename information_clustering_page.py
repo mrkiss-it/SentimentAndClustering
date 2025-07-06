@@ -20,7 +20,7 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
     """Main function cho Information Clustering app"""
     
     # Load clustering models theo pattern từ file gốc
-    scaler = StandardScaler()
+    scaler = joblib.load('clustering/cluster_standardScaler.pkl')
     cluster_names = ['Ít hài lòng', 'Hài lòng']
     
     try:
@@ -303,11 +303,11 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
             liked_text = st.text_area(label="What I liked")
             suggested_text = st.text_area(label="Suggestions for improvement")
 
-            salary = st.slider("Salary & benefits", 1, 5, 1)
-            training = st.slider("Training & learning", 1, 5, 1)
-            cares = st.slider("Management cares about me", 1, 5, 1)
-            fun = st.slider("Culture & fun", 1, 5, 1)
-            workspace = st.slider("Office & workspace", 1, 5, 1)
+            salary = st.slider("Salary & benefits", 1, 5, 5)
+            training = st.slider("Training & learning", 1, 5, 5)
+            cares = st.slider("Management cares about me", 1, 5, 5)
+            fun = st.slider("Culture & fun", 1, 5, 5)
+            workspace = st.slider("Office & workspace", 1, 5, 5)
 
             if liked_text.strip() != '':
                 try:
@@ -316,7 +316,7 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
                     print("process_text ok.")
                     liked_embedding = embedding_model.encode([process_text],batch_size=32, show_progress_bar=True,convert_to_numpy=True)
                     print('liked_embedding ok.')
-                    X_num = scaler.fit_transform([[salary, training, cares, fun, workspace]])
+                    X_num = scaler.transform([[salary, training, cares, fun, workspace]])
                     print('scaler number ok.')
 
                     # Ghép embedding với dữ liệu số

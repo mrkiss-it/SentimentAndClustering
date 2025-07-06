@@ -19,7 +19,7 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
     """Main function cho Sentiment Analysis app"""
     
     # Load models theo pattern từ file gốc
-    scaler = StandardScaler(with_mean=False)
+    scaler = joblib.load('sentiment/sentiment_standardScaler.pkl')
     
     try:
         vectorizer = joblib.load("sentiment/tfidf_vectorizer.pkl")
@@ -192,7 +192,7 @@ weighted avg       0.98      0.98      0.98      1836''')
                     print(process_advance_text)
 
                     X_tfidf = vectorizer.transform([process_advance_text])
-                    X_num = scaler.fit_transform([[pos_w, neg_w, pos_e, neg_e, total_we, ratio_all]])
+                    X_num = scaler.transform([[pos_w, neg_w, pos_e, neg_e, total_we, ratio_all]])
                     X = hstack([X_tfidf, csr_matrix(X_num)])
 
                     y_pred = model_final.predict(X)[0]
