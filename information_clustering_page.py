@@ -326,7 +326,7 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
                     print('SVD ok')
                     liked_cluster = liked_model.predict(liked_reduced)[0]
                     print('cluster ok.')
-                    st.success(f"🎯 What I liked: Công ty này thuộc nhóm **{cluster_names[liked_cluster]}**")
+                    st.success(f"🎯 What I liked: Đánh giá này thuộc nhóm **{cluster_names[liked_cluster]}**")
 
                     keywords = get_key_words([process_text])
                     fig = check_wordcloud(keywords, 'What I liked')
@@ -346,7 +346,7 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
                     print("process_text ok.")
                     suggested_embedding = embedding_model.encode([process_text],batch_size=32, show_progress_bar=True,convert_to_numpy=True)
                     print('liked_embedding ok.')
-                    X_num = scaler.fit_transform([[salary, training, cares, fun, workspace]])
+                    X_num = scaler.transform([[salary, training, cares, fun, workspace]])
                     print(X_num)
                     print('scaler number ok.')
 
@@ -357,7 +357,7 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
                     print('SVD ok')
                     suggested_cluster = suggested_model.predict(suggested_reduced)[0]
                     print('cluster ok.')
-                    st.success(f"🎯 Suggestions for improvement: Công ty này thuộc nhóm **{cluster_names[suggested_cluster]}**")
+                    st.success(f"🎯 Suggestions for improvement: Đánh giá này thuộc nhóm **{cluster_names[suggested_cluster]}**")
 
                     keywords = get_key_words([process_text])
                     fig = check_wordcloud(keywords, 'Suggestions for improvement')
@@ -397,7 +397,8 @@ def information_clustering_app(choice_lv2_clean, df_reviews):
                     selected_company = st.selectbox("Chọn công ty phù hợp:", matched_companies)
                 else:
                     selected_company = None
-                    st.warning("❌ Không tìm thấy công ty phù hợp.")
+                    if search_text != '':
+                        st.warning("❌ Không tìm thấy công ty phù hợp.")
 
             if selected_company:
                 st.success(f"✅ Đang hiển thị thông tin cho: {selected_company}")

@@ -235,7 +235,8 @@ weighted avg       0.98      0.98      0.98      1836''')
                 selected_company = st.selectbox("Chọn công ty phù hợp:", matched_companies)
             else:
                 selected_company = None
-                st.warning("❌ Không tìm thấy công ty phù hợp.")
+                if search_text != '':
+                    st.warning("❌ Không tìm thấy công ty phù hợp.")
 
 
         if selected_company:
