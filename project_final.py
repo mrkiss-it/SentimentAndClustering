@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+print("🚀 project_final.py starting import")
 # Thư viện chuẩn
 import re
 import warnings
@@ -59,9 +59,6 @@ if not os.path.exists("clustering/sentence_bert.pkl"):
 
 if not os.path.exists("sentiment/stacking.pkl"):
     gdown.download("https://drive.google.com/uc?id=1fK7ItKl5GcJjxaw3M9IAP6gDyuQXstUz", "sentiment/stacking.pkl", quiet=False)
-
-embedding_model = SentenceTransformer('paraphrase-multilingual-mpnet-base-v2')
-joblib.dump(embedding_model, "clustering/sentence_bert.pkl")
 
 embedding_model = joblib.load("clustering/sentence_bert.pkl")
 kw_model = joblib.load("clustering/keybert_model.pkl")
