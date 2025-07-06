@@ -28,7 +28,7 @@ def sentiment_analysis_app(choice_lv2_clean, df_reviews):
     except FileNotFoundError as e:
         st.error(f"❌ Không tìm thấy file model: {e}")
         st.info("💡 Vui lòng kiểm tra các file sau có tồn tại:")
-        st.info("- sentiment/tfidf_vectorizer2.pkl")
+        st.info("- sentiment/tfidf_vectorizer.pkl")
         st.info("- sentiment/stacking_model.pkl")
         vectorizer = None
         model_final = None

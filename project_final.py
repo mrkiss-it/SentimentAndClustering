@@ -51,9 +51,6 @@ import gdown
 import os
 from sentence_transformers import SentenceTransformer
 
-if not os.path.exists("clustering/keybert_model.pkl"):
-    gdown.download("https://drive.google.com/uc?id=1uA7PiqRpec_Da9K3TxSsU3TGkrFT0AQq", "clustering/keybert_model.pkl", quiet=False)
-
 if not os.path.exists("clustering/sentence_bert.pkl"):
     gdown.download("https://drive.google.com/uc?id=1H7_KROPikN6ru4lccn7H7b3Iacbw6-xU", "clustering/sentence_bert.pkl", quiet=False)
 
@@ -61,7 +58,6 @@ if not os.path.exists("sentiment/stacking.pkl"):
     gdown.download("https://drive.google.com/uc?id=1fK7ItKl5GcJjxaw3M9IAP6gDyuQXstUz", "sentiment/stacking.pkl", quiet=False)
 
 embedding_model = joblib.load("clustering/sentence_bert.pkl")
-kw_model = joblib.load("clustering/keybert_model.pkl")
 
 num_cols = ['Salary & benefits', 'Training & learning', 'Culture & fun',
             'Office & workspace', 'Management cares about me']
@@ -883,25 +879,6 @@ def label_cluster_with_all_methods(df, cluster_col, text_col, top_n=10, display=
                     yake_keywords.append(cleaned)
             set_yake = set(yake_keywords)
 
-
-            # KeyBERT
-            kw_keybert = kw_model.extract_keywords(
-                joined_text,
-                keyphrase_ngram_range=(2, 4),
-                use_maxsum=True,
-                top_n=min(top_n, 15),
-                use_mmr=True,
-                diversity=0.5
-            )
-
-            # Clean và filter KeyBERT keywords
-            keybert_keywords = []
-            for kw, score in kw_keybert:
-                cleaned = clean_keyword(kw)
-                if cleaned and is_valid_keyword(cleaned):
-                    keybert_keywords.append(cleaned)
-            set_keybert = set(keybert_keywords)
-
             # TextRank
             set_textrank = set()
             try:
@@ -920,12 +897,11 @@ def label_cluster_with_all_methods(df, cluster_col, text_col, top_n=10, display=
                 set_textrank = set()
 
             # Tổng hợp và voting
-            all_keywords = list(set_yake | set_keybert | set_textrank)
+            all_keywords = list(set_yake | set_textrank)
             voting_score = {}
             for kw in all_keywords:
                 voting_score[kw] = (
                     (kw in set_yake) +
-                    (kw in set_keybert) +
                     (kw in set_textrank)
                 )
 
@@ -946,7 +922,6 @@ def label_cluster_with_all_methods(df, cluster_col, text_col, top_n=10, display=
             if display:
                 print(f"\n📌 Cluster {cluster_id} - Label gợi ý: {final_labels}")
                 print(f"→ YAKE: {list(set_yake)[:3]}")
-                print(f"→ KeyBERT: {list(set_keybert)[:3]}")
                 print(f"→ TextRank: {list(set_textrank)[:3]}")
 
         except Exception as e:
