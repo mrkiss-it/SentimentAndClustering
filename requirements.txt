@@ -19,3 +19,4 @@ openpyxl
 yake
 summa
 gdown
+sentence_transformers
