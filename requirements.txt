@@ -16,4 +16,5 @@ underthesea
 pyvi
 regex
 openpyxl
+yake
 
