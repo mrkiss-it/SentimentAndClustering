@@ -15,3 +15,4 @@ transformers
 underthesea
 pyvi
 regex
+openpyxl
