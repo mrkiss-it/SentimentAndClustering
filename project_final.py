@@ -50,12 +50,17 @@ from sklearn.metrics.pairwise import cosine_similarity
 import os
 import gdown  # pip install gdown
 
+import gdown
+import os
+
 if not os.path.exists("clustering/keybert_model.pkl"):
-    gdown.download("https://drive.google.com/file/d/1uA7PiqRpec_Da9K3TxSsU3TGkrFT0AQq/view?usp=drive_link", "clustering/keybert_model.pkl", quiet=False)
+    gdown.download("https://drive.google.com/uc?id=1uA7PiqRpec_Da9K3TxSsU3TGkrFT0AQq", "clustering/keybert_model.pkl", quiet=False)
+
 if not os.path.exists("clustering/sentence_bert.pkl"):
-    gdown.download("https://drive.google.com/file/d/1H7_KROPikN6ru4lccn7H7b3Iacbw6-xU/view?usp=drive_link", "clustering/sentence_bert.pkl", quiet=False)
+    gdown.download("https://drive.google.com/uc?id=1H7_KROPikN6ru4lccn7H7b3Iacbw6-xU", "clustering/sentence_bert.pkl", quiet=False)
+
 if not os.path.exists("sentiment/stacking.pkl"):
-    gdown.download("https://drive.google.com/file/d/1fK7ItKl5GcJjxaw3M9IAP6gDyuQXstUz/view?usp=sharing", "sentiment/stacking.pkl", quiet=False)
+    gdown.download("https://drive.google.com/uc?id=1fK7ItKl5GcJjxaw3M9IAP6gDyuQXstUz", "sentiment/stacking.pkl", quiet=False)
 
 
 embedding_model = joblib.load("clustering/sentence_bert.pkl")
