@@ -49,7 +49,7 @@ from pathlib import Path
 from sklearn.metrics.pairwise import cosine_similarity
 import gdown
 import os
-import sentence_transformers as SentenceTransformer
+from sentence_transformers import SentenceTransformer
 
 if not os.path.exists("clustering/keybert_model.pkl"):
     gdown.download("https://drive.google.com/uc?id=1uA7PiqRpec_Da9K3TxSsU3TGkrFT0AQq", "clustering/keybert_model.pkl", quiet=False)
