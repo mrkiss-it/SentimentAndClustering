@@ -52,7 +52,7 @@ import os
 from sentence_transformers import SentenceTransformer
 
 if not os.path.exists("clustering/sbert_model"):
-    gdown.download("https://drive.google.com/uc?id=1AbCdEfGhIjKlMnOpQrStUvWxYz", "sentence_bert.zip", quiet=False)
+    gdown.download("https://drive.google.com/uc?id=1H7_KROPikN6ru4lccn7H7b3Iacbw6-xU", "sentence_bert.zip", quiet=False)
     import zipfile
     with zipfile.ZipFile("sentence_bert.zip", 'r') as zip_ref:
         zip_ref.extractall("clustering/sbert_model")
